@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BarChart3, Printer, UserX, Clock } from 'lucide-react';
+import { ArrowRight, BarChart3, Printer, UserX, Clock, ChevronLeft } from 'lucide-react';
 import type { SchoolConfig } from '../types';
 import { getConfig, getAbsences, getTardiness } from '../utils/storage';
 import { formatMinutesToTime } from '../utils/timeUtils';
@@ -125,6 +125,7 @@ export function StatisticsPage() {
                     <th>#</th>
                     <th>اسم المعلم</th>
                     <th>عدد أيام الغياب</th>
+                    <th>التفاصيل</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -133,6 +134,15 @@ export function StatisticsPage() {
                       <td>{index + 1}</td>
                       <td>{stat.teacherName}</td>
                       <td className="highlight">{stat.totalAbsences}</td>
+                      <td>
+                        <button 
+                          className="btn-details"
+                          onClick={() => navigate(`/teacher/${stat.teacherId}`)}
+                        >
+                          <span>عرض التفاصيل</span>
+                          <ChevronLeft size={16} />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -159,6 +169,7 @@ export function StatisticsPage() {
                     <th>اسم المعلم</th>
                     <th>عدد مرات التأخر</th>
                     <th>إجمالي التأخر</th>
+                    <th>التفاصيل</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -168,6 +179,15 @@ export function StatisticsPage() {
                       <td>{stat.teacherName}</td>
                       <td>{stat.totalTardiness}</td>
                       <td className="highlight">{formatMinutesToTime(stat.totalMinutes)}</td>
+                      <td>
+                        <button 
+                          className="btn-details"
+                          onClick={() => navigate(`/teacher/${stat.teacherId}`)}
+                        >
+                          <span>عرض التفاصيل</span>
+                          <ChevronLeft size={16} />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

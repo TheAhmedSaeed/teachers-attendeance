@@ -1,17 +1,5 @@
-import localforage from 'localforage';
 import type { SchoolConfig, AbsenceRecord, TardinessRecord } from '../types';
-
-// Initialize localforage
-localforage.config({
-  name: 'presence-app',
-  storeName: 'attendance_data',
-});
-
-const KEYS = {
-  CONFIG: 'school_config',
-  ABSENCES: 'absence_records',
-  TARDINESS: 'tardiness_records',
-};
+import { apiGetConfig, apiSaveConfig, apiGetAbsences, apiSaveAbsence, apiGetTardiness, apiSaveTardiness } from './api';
 
 // Default configuration
 const defaultConfig: SchoolConfig = {
@@ -71,24 +59,29 @@ const defaultConfig: SchoolConfig = {
 
 // Config operations
 export async function getConfig(): Promise<SchoolConfig> {
-  const config = await localforage.getItem<SchoolConfig>(KEYS.CONFIG);
-  return config || defaultConfig;
+  try {
+    const config = await apiGetConfig();
+    return config || defaultConfig;
+  } catch {
+    return defaultConfig;
+  }
 }
 
 export async function saveConfig(config: SchoolConfig): Promise<void> {
-  await localforage.setItem(KEYS.CONFIG, config);
+  await apiSaveConfig(config);
 }
 
 // Absence operations
 export async function getAbsences(): Promise<AbsenceRecord[]> {
-  const absences = await localforage.getItem<AbsenceRecord[]>(KEYS.ABSENCES);
-  return absences || [];
+  try {
+    return await apiGetAbsences();
+  } catch {
+    return [];
+  }
 }
 
 export async function saveAbsence(absence: AbsenceRecord): Promise<void> {
-  const absences = await getAbsences();
-  absences.push(absence);
-  await localforage.setItem(KEYS.ABSENCES, absences);
+  await apiSaveAbsence(absence);
 }
 
 export async function getAbsencesByTeacher(teacherId: string): Promise<AbsenceRecord[]> {
@@ -104,7 +97,7 @@ export async function getAbsencesByTeacherAndDateRange(
   const absences = await getAbsences();
   const start = new Date(startDate);
   const end = new Date(endDate);
-  
+
   return absences.filter((a) => {
     const absenceDate = new Date(a.date);
     return a.teacherId === teacherId && absenceDate >= start && absenceDate <= end;
@@ -118,14 +111,15 @@ export async function checkAbsenceExists(teacherId: string, date: string): Promi
 
 // Tardiness operations
 export async function getTardiness(): Promise<TardinessRecord[]> {
-  const tardiness = await localforage.getItem<TardinessRecord[]>(KEYS.TARDINESS);
-  return tardiness || [];
+  try {
+    return await apiGetTardiness();
+  } catch {
+    return [];
+  }
 }
 
 export async function saveTardiness(tardiness: TardinessRecord): Promise<void> {
-  const records = await getTardiness();
-  records.push(tardiness);
-  await localforage.setItem(KEYS.TARDINESS, records);
+  await apiSaveTardiness(tardiness);
 }
 
 export async function getTardinessByTeacher(teacherId: string): Promise<TardinessRecord[]> {

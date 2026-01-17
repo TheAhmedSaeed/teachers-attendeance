@@ -1,6 +1,8 @@
 export interface Teacher {
   id: string;
   name: string;
+  nationalId: string; // رقم الهوية
+  phone?: string; // رقم الجوال (اختياري)
 }
 
 export interface SchoolConfig {

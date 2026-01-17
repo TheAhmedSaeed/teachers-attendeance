@@ -7,37 +7,25 @@ import {
   BarChart3,
   Calendar,
   Building2,
-  User
+  User,
+  List
 } from 'lucide-react';
 import type { SchoolConfig } from '../types';
 import { getConfig } from '../utils/storage';
-import { gregorianToHijri, getArabicDayName } from '../utils/hijriConverter';
+import { DatePicker } from '../components/DatePicker';
 
 export function MainPage() {
   const navigate = useNavigate();
   const [config, setConfig] = useState<SchoolConfig | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [hijriDate, setHijriDate] = useState('');
-  const [dayName, setDayName] = useState('');
 
   useEffect(() => {
     loadConfig();
   }, []);
 
-  useEffect(() => {
-    updateDateInfo(selectedDate);
-  }, [selectedDate]);
-
   async function loadConfig() {
     const savedConfig = await getConfig();
     setConfig(savedConfig);
-  }
-
-  function updateDateInfo(dateString: string) {
-    const date = new Date(dateString);
-    const hijri = gregorianToHijri(date);
-    setHijriDate(hijri.formatted);
-    setDayName(getArabicDayName(date));
   }
 
   function handleAction(action: string) {
@@ -90,20 +78,11 @@ export function MainPage() {
           <Calendar size={22} />
           <span>تاريخ اليوم</span>
         </h2>
-        <div className="date-picker-container">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="date-input"
-          />
-        </div>
-        <div className="date-display">
-          <div className="date-info">
-            <span className="day-name">{dayName}</span>
-            <span className="hijri-date">{hijriDate}</span>
-          </div>
-        </div>
+        <DatePicker
+          value={selectedDate}
+          onChange={setSelectedDate}
+          excludeWeekends={true}
+        />
       </div>
 
       <div className="actions-section">
@@ -129,6 +108,28 @@ export function MainPage() {
               <Clock size={32} />
             </div>
             <span>إدخال التأخر</span>
+          </button>
+
+          <button 
+            className="action-card view-list"
+            onClick={() => navigate('/absence-list')}
+            disabled={!isConfigured}
+          >
+            <div className="action-icon">
+              <List size={32} />
+            </div>
+            <span>سجل الغياب</span>
+          </button>
+
+          <button 
+            className="action-card view-list"
+            onClick={() => navigate('/tardiness-list')}
+            disabled={!isConfigured}
+          >
+            <div className="action-icon">
+              <List size={32} />
+            </div>
+            <span>سجل التأخر</span>
           </button>
 
           <button 

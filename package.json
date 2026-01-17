@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://theahmedsaeed.github.io/teachers-attendance",
+  "homepage": "https://theahmedsaeed.github.io/teachers-attendeance",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -13,6 +13,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@vercel/kv": "^2.0.0",
     "date-fns": "^4.1.0",
     "hijri-converter": "^1.1.1",
     "jspdf": "^4.0.0",
@@ -21,7 +22,8 @@
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.12.0"
+    "react-router-dom": "^7.12.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
